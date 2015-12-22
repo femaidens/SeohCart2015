@@ -14,9 +14,9 @@ public class Navigate extends CommandGroup {
     
     public  Navigate() {
     	Robot.drive.getPositions();
-    	/*for (int i = 0 ; i < Robot.drive.getYDistance(); i++)
+    	for (int i = 0 ; i < Robot.drive.getYDistance(); i++)
     		addSequential(new DriveOneFoot(0.5));
-    		*/
+    	
     	addSequential (new TurnRight(0.5));
     	for (int i = 0; i < Robot.drive.getXDistance(); i++)
     		addSequential (new DriveOneFoot(0.5));

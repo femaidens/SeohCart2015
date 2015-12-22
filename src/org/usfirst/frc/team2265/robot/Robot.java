@@ -3,6 +3,7 @@ package org.usfirst.frc.team2265.robot;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team2265.robot.commands.ExampleCommand;
+import org.usfirst.frc.team2265.robot.commands.InfraredFollow;
 import org.usfirst.frc.team2265.robot.subsystems.ExampleSubsystem;
 import org.usfirst.frc.team2265.robot.commands.TeleoperatedDrive;
 import org.usfirst.frc.team2265.robot.subsystems.Drive;
@@ -35,7 +37,8 @@ public class Robot extends IterativeRobot {
     public static SendableChooser destinationRoomSelector;
     public static SendableChooser currentRoomSelector; 
 
-    public static HashMap<String, int[]> rooms = new HashMap<String, int[]>();
+    public static HashMap<Object, int[]> rooms = new HashMap<Object, int[]>();
+    
 
     /**
      * This function is run when the robot is first started up and should be
@@ -45,40 +48,41 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		drive = new Drive();
 		autonChooser = new SendableChooser();
+		autonChooser.addDefault("Send the robot to a room.", new Navigate());
+		autonChooser.addObject("Robot follower", new InfraredFollow());
 		destinationRoomSelector= new SendableChooser();
 		currentRoomSelector = new SendableChooser();
 		setupRoomChoosers();
         // instantiate the command used for the autonomous period
-        autonomousCommand = new Navigate();
-        SmartDashboard.putData("What room are you currently in?", currentRoomSelector);
-        SmartDashboard.putData("What room should the cart drive to?", destinationRoomSelector);
+        autonomousCommand = (Command) autonChooser.getSelected();
+        
     }
 	public void setupRoomChoosers(){
-		/*currentRoomSelector.addDefault("123A", new int[] {1,123});
-		currentRoomSelector.addObject("129B", new int[] {1,24});
-	    currentRoomSelector.addObject("127P", new int[] {1,33});
-	    currentRoomSelector.addObject("127A", new int[] {1,52});
-	    currentRoomSelector.addObject("127B", new int[] {1,70});
-	    currentRoomSelector.addObject("125A", new int[] {1,70});
-	    currentRoomSelector.addObject("125B", new int[] {1,98});
-	    currentRoomSelector.addObject("123B", new int[] {1,133});
-	    currentRoomSelector.addObject("130A", new int[] {-3,63});
-	    currentRoomSelector.addObject("128A", new int[] {-3,93});
-	    currentRoomSelector.addObject("126A", new int[] {-3,123});
-	    
-	    destinationRoomSelector.addDefault("123A", new int[] {1,123});
-		destinationRoomSelector.addObject("129B", new int[] {1,24});
-	    destinationRoomSelector.addObject("127P", new int[] {1,33});
-	    destinationRoomSelector.addObject("127A", new int[] {1,52});
-	    destinationRoomSelector.addObject("127B", new int[] {1,70});
-	    destinationRoomSelector.addObject("125A", new int[] {1,70});
-	    destinationRoomSelector.addObject("125B", new int[] {1,98});
-	    destinationRoomSelector.addObject("123B", new int[] {1,133});
-	    destinationRoomSelector.addObject("130A", new int[] {-3,63});
-	    destinationRoomSelector.addObject("128A", new int[] {-3,93});
-	    destinationRoomSelector.addObject("126A", new int[] {-3,123});
-		*/
 		
+		currentRoomSelector.addDefault("123A", new String("123A"));
+		currentRoomSelector.addObject("129B", new String("129B"));
+	    currentRoomSelector.addObject("127P", new String("127P"));
+	    currentRoomSelector.addObject("127A", new String("127A"));
+	    currentRoomSelector.addObject("127B", new String("127B"));
+	    currentRoomSelector.addObject("125A", new String("125A"));
+	    currentRoomSelector.addObject("125B", new String("125B"));
+	    currentRoomSelector.addObject("123B", new String("123B"));
+	    currentRoomSelector.addObject("130A", new String("130A"));
+	    currentRoomSelector.addObject("128A", new String("128A"));
+	    currentRoomSelector.addObject("126A", new String("126A"));
+	    
+	    destinationRoomSelector.addDefault("123A", new String("123A"));
+		destinationRoomSelector.addObject("129B", new String("129B"));
+	    destinationRoomSelector.addObject("127P", new String("127P"));
+	    destinationRoomSelector.addObject("127A", new String("127A"));
+	    destinationRoomSelector.addObject("127B", new String("127B"));
+	    destinationRoomSelector.addObject("125A", new String("125A"));
+	    destinationRoomSelector.addObject("125B", new String("125B"));
+	    destinationRoomSelector.addObject("123B", new String("123B"));
+	    destinationRoomSelector.addObject("130A", new String("130A"));
+	    destinationRoomSelector.addObject("128A", new String("128A"));
+	    destinationRoomSelector.addObject("126A", new String("126A"));
+	    
 	    rooms.put("129A", new int[] {1,6});
 	    rooms.put("129B", new int[] {1,24});
 	    rooms.put("127P", new int[] {1,33});
@@ -92,6 +96,10 @@ public class Robot extends IterativeRobot {
 	    rooms.put("130A", new int[] {-3,63});
 	    rooms.put("128A", new int[] {-3,93});
 	    rooms.put("126A", new int[] {-3,123});
+	    
+
+		SmartDashboard.putData("What room are you currently in?", currentRoomSelector);
+        SmartDashboard.putData("What room should the cart drive to?", destinationRoomSelector);
 	}
 		
 	public void disabledPeriodic() {

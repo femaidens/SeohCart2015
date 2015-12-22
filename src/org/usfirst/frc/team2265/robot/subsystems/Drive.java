@@ -32,6 +32,8 @@ public class Drive extends Subsystem{
 	private static int currYPos;
 	private static int toXPos;
 	private static int toYPos;
+	private Object currentRoomNum;
+    private Object toRoomNum;
 	
 	
 	public void getPositions(){
@@ -42,19 +44,21 @@ public class Drive extends Subsystem{
 		//int[] destinationRoom = (int[])Robot.destinationRoomSelector.getSelected();
 		//toXPos = destinationRoom[0];
 		//toYPos = destinationRoom[1];
-		
-		currXPos = Robot.rooms.get(Robot.currentRoomSelector.getSelected()[0]);
-		currYPos = Robot.rooms.get(Robot.currentRoomSelector.getSelected()[1]);
-		toXPos = Robot.rooms.get(Robot.destinationRoomSelector.getSelected()[0]);
-		toXPos = Robot.rooms.get(Robot.destinationRoomSelector.getSelected()[1]);
+		currentRoomNum = Robot.currentRoomSelector.getSelected();
+		toRoomNum = Robot.destinationRoomSelector.getSelected();
+		int[] currPosArray = Robot.rooms.get(toRoomNum);
+		int[] toPosArray = Robot.rooms.get(currentRoomNum);
+		currXPos =currPosArray[0];
+		currYPos = currPosArray[1];
+		toXPos = toPosArray[0];
+		toXPos = toPosArray[1];
 	}
 	public int getXDistance(){
 		return toXPos - currXPos;
 	}
-	/*public int getYDistance(){
+	public int getYDistance(){
 		return toYPos - currYPos;
 	}
-	*/
 	public void drive(double fLVal, double fRVal, double bRVal, double bLVal){
 		frontLeft.set(fLVal);
 		backLeft.set(bLVal);
